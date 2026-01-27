@@ -23,6 +23,8 @@ If you connect the data pin to a serial RX pin, then `demo_sniff.py` will provid
 Here is an example of the connection:
 ![](example_serial_connection.jpg)
 
+Note that the ground connection here is provided via USB - both my USB serial and charger are plugged into a computer USB port. You would normally also need the ground connection (data & power ground are shared).
+
 ### Decoding Pre-Recorded Data
 
 If you run the file `demo.py` it will decode a few example captures. You will see both the unscrambled data along with the decoded data. There are two different captures, one from a charge starting (capturing the initial plugging in of the battery, showing the discover and address assignment) and one from later on in an in-progress storage discharge (showing a slowly decreasing battery voltage).

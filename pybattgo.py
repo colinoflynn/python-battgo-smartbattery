@@ -10,7 +10,7 @@
 #
 # This project has a BSD 2-clause license, which follows the Go-BattGo project license
 #
-#   Copyright (c) 2025, Colin O'Flynn (Python conversion)
+#   Copyright (c) 2026, Colin O'Flynn (Python conversion)
 #   Copyright (c) 2021, Bertold Van den Bergh (Go reference implementation)
 #
 #  Redistribution and use in source and binary forms, with or without
