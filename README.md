@@ -18,7 +18,7 @@ This project is not (currently? ever?) a real python package, but some small scr
 
 ### Connecting to Serial Cable
 
-TODO - mention the need for resistor & diode clamp.
+If you connect the data pin to a serial RX pin, then `demo_sniff.py` will provide real-time analysis of the packets. For this demo I used a 10kOhm resistor in series with the data pin to limit current, and used a serial port with a voltage translator that "should" be fine with the 1mA input drive that results. This demo also data logs the cell voltages with a system timestamp.
 
 ### Decoding Pre-Recorded Data
 
@@ -69,7 +69,7 @@ I leave the following links here in case it's useful, will move to a blog post e
 
 [go BattGO](https://github.com/BertoldVdb/go-battgo)
 
-I based this work on the following BattGo project:
+I based this work on the BattGo project - this is just a Python port of the go code.
 
 #### isdtool
 
