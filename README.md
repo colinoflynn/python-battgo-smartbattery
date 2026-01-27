@@ -20,6 +20,9 @@ This project is not (currently? ever?) a real python package, but some small scr
 
 If you connect the data pin to a serial RX pin, then `demo_sniff.py` will provide real-time analysis of the packets. For this demo I used a 10kOhm resistor in series with the data pin to limit current, and used a serial port with a voltage translator that "should" be fine with the 1mA input drive that results. This demo also data logs the cell voltages with a system timestamp.
 
+Here is an example of the connection:
+![](example_serial_connection.jpg)
+
 ### Decoding Pre-Recorded Data
 
 If you run the file `demo.py` it will decode a few example captures. You will see both the unscrambled data along with the decoded data. There are two different captures, one from a charge starting (capturing the initial plugging in of the battery, showing the discover and address assignment) and one from later on in an in-progress storage discharge (showing a slowly decreasing battery voltage).
