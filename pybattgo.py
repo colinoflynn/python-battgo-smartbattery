@@ -278,7 +278,7 @@ class BattGoDecoder(object):
         elif packet[0] == 0x89:
             return self.decode_factoryinfo(packet)
         else:
-            return "Unkown packet"
+            return "Unknown packet"
 
     def decode_cycleinfo(self, payload: bytes) -> dict:
         """
