@@ -35,7 +35,9 @@ In my testing the pull-up is *not* on the battery connector (which makes sense f
 
 ![](example_battery_ftdi.jpg)
 
-Again - I don't know if some batteries have a pull-up, so this would be better with a diode clamp. At minimum I suggest plugging this into a USB hub so it hopefully gives you some buffer. But the file [demo_ftdicable.py](demo_ftdicable.py) can successfully talk to a few batteries I tried, and gets their status and cell voltages:
+Again - I don't know if some batteries have a pull-up, so this would be better with a diode clamp. At minimum I suggest plugging this into a USB hub so it hopefully gives you some buffer. **A slip of touching the Battery +BAT pin which is right beside the data pin will put possibly several hundred apps at 12V into your computer USB port**, this is not normally something they enjoy.
+
+The file [demo_ftdicable.py](demo_ftdicable.py) can successfully talk to a few batteries I tried, and gets their status and cell voltages:
 
 ```
 $ python demo_ftdicable.py
