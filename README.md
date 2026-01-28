@@ -10,15 +10,15 @@ The BattGO website is no longer functional, but you can find copies of pages fro
 
 ## Physical Interface
 
-The protocol is a serial protocol at 9600 baud, using open-drain drivers. The protocol appears to be pulled up to the *battery voltage* so be careful interfacing this to normal logic-level devices.
+The protocol is a serial protocol at 9600 baud, using open-drain drivers. The protocol appears to be pulled up to the *battery voltage* on the chargers so be careful interfacing this to normal logic-level devices.
 
 ## Examples
 
 This project is not (currently? ever?) a real python package, but some small scripts and examples.
 
-### Connecting to Serial Cable
+### Sniffing with a serial cable
 
-If you connect the data pin to a serial RX pin, then `demo_sniff.py` will provide real-time analysis of the packets. For this demo I used a 10kOhm resistor in series with the data pin to limit current, and used a serial port with a voltage translator that "should" be fine with the 1mA input drive that results. This demo also data logs the cell voltages with a system timestamp.
+If you connect the data pin to a serial RX pin, then [demo_sniff.py](demo_sniff.py) will provide real-time analysis of the packets. For this demo I used a 10kOhm resistor in series with the data pin to limit current, and used a serial port with a voltage translator that "should" be fine with the 1mA input drive that results. This demo also data logs the cell voltages with a system timestamp.
 
 Here is an example of the connection:
 ![](example_serial_connection.jpg)
@@ -26,6 +26,80 @@ Here is an example of the connection:
 Note that the ground connection here is provided via USB - both my USB serial and charger are plugged into a computer USB port. You would normally also need the ground connection (data & power ground are shared). You can use the balance port ground pin as an easy ground so you only have one clip on the battery lead.
 
 The Spektrum USB Programming cable (SPMA3065) could possibly be used in this way *with a 10K-ohm series resistor*, but I haven't tested that yet. Feel free to open an issue if this could be useful.
+
+### Reading a battery with a FTDI Cable (SPMA3065)
+
+The Spektrum programming cable uses an FTDI chip with some sort of open-drain driver. You can see details of a homebrew design in [this rcgroups post](https://www.rcgroups.com/forums/showpost.php?p=44758101&postcount=29). This works with newer FTDI chips as well (see my post later in the thread using FT231x/FT230x).
+
+In my testing the pull-up is *not* on the battery connector (which makes sense from a power-saving perspective), and a few batteries I tested *did* work with 3.3V I/O, despite the chargers pulling up the I/O pin to a much higher voltage. This means you can simply connect the "AS3X Programming Cable" (which is an open-drain single-wire UART connection) to the data pin of a *battery* (DO NOT connect to a charger directly as the charger will output a higher voltage):
+
+![](example_battery_ftdi.jpg)
+
+Again - I don't know if some batteries have a pull-up, so this would be better with a diode clamp. At minimum I suggest plugging this into a USB hub so it hopefully gives you some buffer. But the file [demo_ftdicable.py](demo_ftdicable.py) can successfully talk to a few batteries I tried, and gets their status and cell voltages:
+
+```
+$ python demo_ftdicable.py
+aa01000d008a88888888888888888888887006
+01 00 1 :020000000000000000000000
+REQ: Ping
+aa01000d018b8b8d8f91939597999b9d9f0107
+00 01 1 :0301001101ba29d2741e01
+aa01000d02886c93968b9f188f78daacb7b306
+RESP: Pong
+01 00 1 :020000000000000000000000
+REQ: Ping
+01 00 1 :02e201001101ba29d2741e01
+REQ: Ping
+e2 01 1 :0301001101ba29d2741e01
+RESP: Pong
+aa01e2020303eb00
+01 e2 1 :88
+REQ: Factory info
+aa01e2020404ed00
+e2 01 1 :8901b80be40c68103c0f5203000032002c01ec3cec2d010300
+{'battery type': 'LiPo', 'battery number of cells': 3, 'battery supports auto discharge': True, 'cell discharge cutoff voltage': 3.0, 'cell discharge normal voltage': 3.3, 'cell charge max voltage': 4.2, 'cell storage default voltage': 3.9, 'cell capacity (mAh)': 850.0, 'battery max charge current (A)': 4.25, 'battery max discharge current (A)': 25.5, 'low temp use (C)': -20, 'high temp use (C)': 60, 'low temp storage (C)': -20, 'high temp storage (C)': 45}
+01 e2 1 :88
+REQ: Factory info
+e2 01 1 :8901b80be40c68103c0f5203000032002c01ec3cec2d010300
+{'battery type': 'LiPo', 'battery number of cells': 3, 'battery supports auto discharge': True, 'cell discharge cutoff voltage': 3.0, 'cell discharge normal voltage': 3.3, 'cell charge max voltage': 4.2, 'cell storage default voltage': 3.9, 'cell capacity (mAh)': 850.0, 'battery max charge current (A)': 4.25, 'battery max discharge current (A)': 25.5, 'low temp use (C)': -20, 'high temp use (C)': 60, 'low temp storage (C)': -20, 'high temp storage (C)': 45}
+aa01e20205cfb901
+aa01e20206ccb701
+01 e2 1 :42
+REQ: User settings
+e2 01 1 :435203003c0f541048ce40ea407640a93f01
+{'user battery charge current (a)': 0.85, 'user cell storage voltage': 3.9, 'user cell max voltage': 4.18, 'user self discharge enabled': True, 'user self discharge time (h)': 72}
+01 e2 1 :42
+REQ: User settings
+aa01e20507cb919da18903
+e2 01 1 :435203003c0f541048ce40ea407640a93f01
+{'user battery charge current (a)': 0.85, 'user cell storage voltage': 3.9, 'user cell max voltage': 4.18, 'user self discharge enabled': True, 'user self discharge time (h)': 72}
+aa01e20508d49092907603
+01 e2 1 :44000200
+REQ: State
+e2 01 1 :4500024c104710411014000000000000
+{'cell voltages (V)': [4.172, 4.167, 4.161], 'battery temp (c)': 20}
+aa01e20509d59397978703
+01 e2 1 :44000200
+REQ: State
+e2 01 1 :4500024c104710411014000000000000
+{'cell voltages (V)': [4.172, 4.167, 4.161], 'battery temp (c)': 20}
+01 e2 1 :44000200
+REQ: State
+aa01e2050ad696a8bec403
+e2 01 1 :4500024c104710411014000000000000
+{'cell voltages (V)': [4.172, 4.167, 4.161], 'battery temp (c)': 20}
+01 e2 1 :44000200
+REQ: State
+e2 01 1 :4500024c104710411014000000000000
+{'cell voltages (V)': [4.172, 4.167, 4.161], 'battery temp (c)': 20}
+aa01e2050bd795a9bdc503
+01 e2 1 :44000200
+REQ: State
+aa01e2050cd0acb6ccf203
+e2 01 1 :4500024c104710411014000000000000
+{'cell voltages (V)': [4.172, 4.167, 4.161], 'battery temp (c)': 20}
+01 e2 1 :44000200
+```
 
 ### Decoding Pre-Recorded Data
 

@@ -36,7 +36,7 @@
 
 from __future__ import annotations
 from dataclasses import dataclass, field
-from typing import List, Optional
+from typing import List, Optional, Protocol
 from enum import IntEnum
 import struct
 import time
@@ -441,3 +441,74 @@ class BattGoDecoder(object):
             "low temp storage (C)":self.data.temp_storage_low_c,
             "high temp storage (C)":self.data.temp_storage_high_c,
         }
+
+
+class Writeable(Protocol):
+    def write(self, data: bytes) -> int: ...
+
+class BattGoPhyTx:
+    """
+    Transmitter for the BattGO PHY, compatible with the Go TXSendPacket().
+    Keeps its own txSeed counter like the Go struct.
+    """
+
+    def __init__(self, port: Writeable, *, disable_scrambler: bool = False, initial_seed: int = 0) -> None:
+        self.port = port
+        self.disable_scrambler = disable_scrambler
+        self.tx_seed = initial_seed & 0xFF
+
+    @staticmethod
+    def _add_byte(buf: bytearray, checksum_sum: int, b: int) -> int:
+        """Append byte with 0xAA byte-stuffing; update and return uint16 checksum sum."""
+        b &= 0xFF
+        checksum_sum = (checksum_sum + b) & 0xFFFF
+        if b == 0xAA:
+            buf.append(0xAA)  # stuffing
+        buf.append(b)
+        return checksum_sum
+
+    def encode_packet(self, addr_source: int, addr_dest: int, payload: bytes) -> bytes:
+        """
+        Returns raw line bytes to write to UART (includes 0xAA framing + stuffing).
+        `payload` is the higher-layer payload (NOT including seed).
+        """
+        if len(payload) > 250:
+            raise ValueError("payload too long (max 250 for this framing)")
+
+        tx = bytearray()
+        tx.append(0xAA)
+
+        s = 0  # uint16 running sum (not including initial 0xAA)
+        s = self._add_byte(tx, s, addr_source)
+        s = self._add_byte(tx, s, addr_dest)
+        s = self._add_byte(tx, s, len(payload) + 1)  # +seed
+
+        if self.disable_scrambler:
+            seed = 120
+            s = self._add_byte(tx, s, seed)
+            payload_scrambled = payload
+        else:
+            seed = self.tx_seed
+            self.tx_seed = (self.tx_seed + 1) & 0xFF
+            s = self._add_byte(tx, s, seed)
+            tmp = bytearray(payload)
+            _scramble(seed, tmp)
+            payload_scrambled = bytes(tmp)
+
+        for b in payload_scrambled:
+            s = self._add_byte(tx, s, b)
+
+        final_sum = s
+        s = self._add_byte(tx, s, final_sum & 0xFF)
+        s = self._add_byte(tx, s, (final_sum >> 8) & 0xFF)
+
+        return bytes(tx)
+
+    def send_packet(self, addr_source: int, addr_dest: int, payload: bytes) -> None:
+        """Encode and write a packet to the underlying port."""
+        data = self.encode_packet(addr_source, addr_dest, payload)
+        print(data.hex())
+        n = self.port.write(data)
+        # pyserial returns bytes-written; file-like may return None
+        if n is not None and n != len(data):
+            raise IOError(f"short write: wrote {n} of {len(data)} bytes")
