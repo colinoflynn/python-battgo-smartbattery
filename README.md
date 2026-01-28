@@ -1,12 +1,12 @@
 # Python BattGo / Spektrum Smart Battery Protocol Implementation
 
-BattGO is a technology developed by [isdt](isdt.co) to simplify LiPol battery management. This has a small "data" pin
-alongside power pins with "normal" RC hobby connectors that allows the charger to monitor individual cell data, as well
-as know what charge currents the battery should use.
+BattGO is a technology developed by [isdt](https:/www.isdt.co) to simplify LiPol battery management. This has a small "data" pin alongside power pins with "normal" RC hobby connectors that allows the charger to monitor individual cell data, as well as know what charge currents the battery should use.
 
 BattGO was licensed by HorizonHobby / Spektrum and is now used as their Spektrum Gen2 SMART batteries, using a quasi-proprietary "IC3" connector (modified version of EC3 with another pin).
 
 Note that BattGo products appear to work with Spektrum batteries. An existing [Go BattGO](https://github.com/BertoldVdb/go-battgo) implementation included sufficient information to implement this Python version. Presumably there was developer documentation available but the links no longer work.
+
+The BattGO website is no longer functional, but you can find copies of pages from the wayback machine.
 
 ## Physical Interface
 
@@ -23,7 +23,9 @@ If you connect the data pin to a serial RX pin, then `demo_sniff.py` will provid
 Here is an example of the connection:
 ![](example_serial_connection.jpg)
 
-Note that the ground connection here is provided via USB - both my USB serial and charger are plugged into a computer USB port. You would normally also need the ground connection (data & power ground are shared).
+Note that the ground connection here is provided via USB - both my USB serial and charger are plugged into a computer USB port. You would normally also need the ground connection (data & power ground are shared). You can use the balance port ground pin as an easy ground so you only have one clip on the battery lead.
+
+The Spektrum USB Programming cable (SPMA3065) could possibly be used in this way *with a 10K-ohm series resistor*, but I haven't tested that yet. Feel free to open an issue if this could be useful.
 
 ### Decoding Pre-Recorded Data
 
@@ -65,6 +67,36 @@ These correspond to the following
  --> Decoded: {'cell voltages (V)': [4.03, 4.025, 4.026], 'battery temp (c)': 23}
  ```
 
+### Available Information
+
+This interface provides currently:
+
+* Manufacturer Data
+  - Serial Number
+  - Allowed storage temp range
+  - Allowed usage temp range
+  - Battery technology and number of cells
+  - Battery max discharge current
+  - Battery max charge current
+  - Battery capacity (ah)
+  - Battery voltages: max, storage, discharge, and low-voltage cut-off
+  - If battery supports auto discharge
+
+* User Settings:
+  - Preferred charge current
+  - Preferred charge voltage
+  - Preferred storage voltage
+  - Self discharge timeout options
+
+* Statistics:
+  - Current cell voltages
+  - Current temperature
+  - Charge cycles
+  - Over-charge errors stored
+  - Over-discharge errors stored
+  - Over-temp errors stored
+
+The internal cell resistance which is displayed on chargers appears to be calculated from charge current & cell voltage, and thus is not available.
 
 ## Related Useful Information
 
