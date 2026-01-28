@@ -18,13 +18,16 @@ with serial.Serial('com10', 9600, timeout=1) as ser:
         #    print(out, flush=True)
 
         for p in out:
-            decoded = bgdec.process_packet(p.payload)
-            print(decoded, flush=True)
+            if len(p.payload) > 0:
+                print("%02x %02x %d :"%(p.addr_source, p.addr_dest, p.checksum_ok) + p.payload.hex())
 
-            if old_cellv != bgdec.data.cell_voltage_v:
-                log.write(", ".join(["%f"%v for v in bgdec.data.cell_voltage_v]) + ", %d"%time.time() + " \n")
-                log.flush()
+                decoded = bgdec.process_packet(p.payload)
+                print(decoded, flush=True)
 
-            old_cellv = bgdec.data.cell_voltage_v[:]
+                if old_cellv != bgdec.data.cell_voltage_v:
+                    log.write(", ".join(["%f"%v for v in bgdec.data.cell_voltage_v]) + ", %d"%time.time() + " \n")
+                    log.flush()
+
+                old_cellv = bgdec.data.cell_voltage_v[:]
 
 log.close()
