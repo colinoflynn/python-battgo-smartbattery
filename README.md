@@ -6,6 +6,8 @@ BattGO was licensed by HorizonHobby / Spektrum and is now used as their Spektrum
 
 Note that BattGo products appear to work with Spektrum batteries. An existing [Go BattGO](https://github.com/BertoldVdb/go-battgo) implementation included sufficient information to implement this Python version. Presumably there was developer documentation available but the links no longer work.
 
+There is also an [Arduino implementation](https://github.com/colinoflynn/arduino-battgo-smartbattery) based on the go code.
+
 The BattGO website is no longer functional, but you can find copies of pages from the wayback machine.
 
 ## Physical Interface
