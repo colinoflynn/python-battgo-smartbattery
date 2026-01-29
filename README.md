@@ -18,7 +18,9 @@ This project is not (currently? ever?) a real python package, but some small scr
 
 ### Sniffing with a serial cable
 
-If you connect the data pin to a serial RX pin, then [demo_sniff.py](demo_sniff.py) will provide real-time analysis of the packets. For this demo I used a 10kOhm resistor in series with the data pin to limit current, and used a serial port with a voltage translator that "should" be fine with the 1mA input drive that results. This demo also data logs the cell voltages with a system timestamp.
+If you connect the data pin to a serial RX pin, then [demo_sniff.py](demo_sniff.py) will provide real-time analysis of the packets. For this demo I used a 10kOhm resistor in series with the data pin to limit current, and used a serial port with a voltage translator that "should" be fine with the 1mA input drive that results. This demo also data logs the cell voltages with a system timestamp. This lets you make graphs of your charger performance:
+
+![](example_charging_graph.png)
 
 Here is an example of the connection:
 ![](example_serial_connection.jpg)
