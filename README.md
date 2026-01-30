@@ -29,6 +29,11 @@ Here is an example of the connection:
 
 You can use the balance port ground pin as an easy ground so you only have one clip on the battery lead. If you have your charger plugged into the same USB as your computer you can also rely on the shared USB ground (the baud rate is slow enough to not need a very good ground).
 
+Ideally you should have a clamp to a lower voltage like this:
+![](clamp.png)
+
+I don't have the diode in the above photo - this is because most interface ICs have electro-static discharge (ESD) diode clamps built in. They cannot handle much current normally however, so using an external diode is still a good idea.
+
 If sniffing a lot of batteries, you could make an adapter out of two back-to-back IC3® connectors (which are available for purchase).
 
 The Spektrum USB Programming cable (SPMA3065) could possibly be used in this way *with a 10K-ohm series resistor*, but I haven't tested that yet. Feel free to open an issue if this could be useful.
