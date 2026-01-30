@@ -1,6 +1,6 @@
 #
 # BattGo is a battery communication protocol originally at BattGo.org . This protocol
-# is used in Spektrum smart batteries as the communication protocol.
+# is used in some RC car smart batteries as the communication protocol.
 #
 # This file is a Python implementation of the BattGo protocol based on the Go-BattGo project
 # https://github.com/BertoldVdb/go-battgo

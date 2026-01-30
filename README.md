@@ -2,9 +2,9 @@
 
 BattGO is a technology developed by [isdt](https:/www.isdt.co) to simplify LiPol battery management. This has a small "data" pin alongside power pins with "normal" RC hobby connectors that allows the charger to monitor individual cell data, as well as know what charge currents the battery should use.
 
-BattGO was licensed by HorizonHobby / Spektrum and is now used as their Spektrum Gen2 SMART batteries, using a quasi-proprietary "IC3" connector (modified version of EC3 with another pin).
+BattGO was licensed by Horizon Hobby® and is now used as their Spektrum™ Gen2 SMART batteries, using a quasi-proprietary "IC3®" connector (modified version of EC3 with another pin).
 
-Note that BattGo products appear to work with Spektrum batteries. An existing [Go BattGO](https://github.com/BertoldVdb/go-battgo) implementation included sufficient information to implement this Python version. Presumably there was developer documentation available but the links no longer work.
+An existing [Go BattGO](https://github.com/BertoldVdb/go-battgo) implementation included sufficient information to implement this Python version. Presumably there was developer documentation available but the links no longer work.
 
 There is also an [Arduino implementation](https://github.com/colinoflynn/arduino-battgo-smartbattery) based on the go code.
 
@@ -12,7 +12,7 @@ The BattGO website is no longer functional, but you can find copies of pages fro
 
 ## Physical Interface
 
-The protocol is a serial protocol at 9600 baud, using open-drain drivers. The protocol appears to be pulled up to the *battery voltage* on the chargers so be careful interfacing this to normal logic-level devices.
+The protocol is a serial protocol at 9600 baud, using open-drain drivers. The protocol appears to be pulled up to the *battery voltage* on the chargers so be careful interfacing this to normal logic-level devices. If talking to the battery itself, you can pull up to a lower voltage to make interfacing easier.
 
 ## Examples
 
@@ -20,7 +20,7 @@ This project is not (currently? ever?) a real python package, but some small scr
 
 ### Sniffing with a serial cable
 
-If you connect the data pin to a serial RX pin, then [demo_sniff.py](demo_sniff.py) will provide real-time analysis of the packets. For this demo I used a 10kOhm resistor in series with the data pin to limit current, and used a serial port with a voltage translator that "should" be fine with the 1mA input drive that results. This demo also data logs the cell voltages with a system timestamp. This lets you make graphs of your charger performance:
+If you connect the data pin to a serial RX pin, then [demo_sniff.py](demo_sniff.py) will provide real-time analysis of the packets. For this demo I used a 10kOhm resistor in series with the data pin to limit current, and relied on the serial port diode clamp to accept my ~1mA resulting current. This demo also data logs the cell voltages with a system timestamp. This lets you make graphs of your charger performance:
 
 ![](example_charging_graph.png)
 
@@ -196,6 +196,10 @@ This allows communication over USB (HID) with the charger - the S120 could retur
 
 Note the isdttool project includes a FW decryption & analysis tool - I didn't need this as had no need to R.E. any firmware, but the Spektrum FW is the same as ISDT (rebadged as far as I can tell) so if needed could be useful for future work in reading out the status.
 
+### BattGO Products
+
+Note that BattGo products talk the same protocol, but on at least some new BattGO products they will *ignore* Spektrum batteries (assumed due to the BattGO / Horizon Hobby licensing). Using the sniffer you can see the battery state being polled, but the display does not update to display this.
+
 ## Disclaimers
 
-This is provided AS-IS - you may damage your batteries or charger, this is NOT an official protocol or project and based on other open-source projects. See [LICENSE](LICENSE). You are responsible for safe usage and charging of your batteries. This is NOT associated with any manufacturer or official battery provider. Any trademarks referenced belong to their associated owners, and those trademarks are used to identify the products, not to imply any affiliation, endorsement, or sponsorship of the trademark owners.
+This is provided AS-IS - you may damage your batteries or charger, this is NOT an official protocol or project and based on other open-source projects. See [LICENSE](LICENSE). You are responsible for safe usage and charging of your batteries. This is NOT associated with any manufacturer or official battery provider. Horizon Hobby, IC3, and EC3 are either claimed or registered trademarks of Horizon Hobby, LCC. Spektrum is a trademark of Bachmann Industries, Inc. This project is not associated with Horizon Hobby or Bachmann Industries, Inc. Any trademarks referenced belong to their associated owners, and those trademarks are used to identify the products, not to imply any affiliation, endorsement, or sponsorship of the trademark owners.
