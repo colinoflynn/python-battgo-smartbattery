@@ -205,7 +205,7 @@ Note the isdttool project includes a FW decryption & analysis tool - I didn't ne
 
 ### BattGO Products
 
-Note that BattGo products talk the same protocol, but on at least some new BattGO products they will *ignore* Spektrum batteries (assumed due to the BattGO / Horizon Hobby licensing). Using the sniffer you can see the battery state being polled, but the display does not update to display this.
+Note that BattGo products talk the same protocol, but on at least some new BattGO products they will *ignore* Spektrum batteries (assumed due to the BattGO / Horizon Hobby licensing). For example with the BG-8S (looks to be same hardware as XBC100) using the sniffer you can see the battery state being polled, but the display does not update to display this.
 
 ## Disclaimers
 
