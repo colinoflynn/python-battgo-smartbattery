@@ -36,7 +36,7 @@ I don't have the diode in the above photo - this is because most interface ICs h
 
 If sniffing a lot of batteries, you could make an adapter out of two back-to-back IC3® connectors (which are available for purchase).
 
-The Spektrum USB Programming cable (SPMA3065) could possibly be used in this way *with a 10K-ohm series resistor*, but I haven't tested that yet. Feel free to open an issue if this could be useful.
+The Spektrum USB Programming cable (SPMA3065) could possibly be used in this way *with a 10K-ohm series resistor*, but I haven't tested that yet. Feel free to open an issue if this could be useful, however see below for Python code using the SPMA3065 you could easily copy over into the sniffer routine.
 
 ### Reading a battery with a FTDI Cable (SPMA3065)
 
