@@ -27,7 +27,9 @@ If you connect the data pin to a serial RX pin, then [demo_sniff.py](demo_sniff.
 Here is an example of the connection:
 ![](example_serial_connection.jpg)
 
-Note that the ground connection here is provided via USB - both my USB serial and charger are plugged into a computer USB port. You would normally also need the ground connection (data & power ground are shared). You can use the balance port ground pin as an easy ground so you only have one clip on the battery lead.
+You can use the balance port ground pin as an easy ground so you only have one clip on the battery lead. If you have your charger plugged into the same USB as your computer you can also rely on the shared USB ground (the baud rate is slow enough to not need a very good ground).
+
+If sniffing a lot of batteries, you could make an adapter out of two back-to-back IC3® connectors (which are available for purchase).
 
 The Spektrum USB Programming cable (SPMA3065) could possibly be used in this way *with a 10K-ohm series resistor*, but I haven't tested that yet. Feel free to open an issue if this could be useful.
 
@@ -186,7 +188,7 @@ I leave the following links here in case it's useful, will move to a blog post e
 
 [go BattGO](https://github.com/BertoldVdb/go-battgo)
 
-I based this work on the BattGo project - this is just a Python port of the go code.
+I based this work on the BattGo project - this is just a Python port of the go code. Porting done primarily with LLM automated tools.
 
 #### isdtool
 
